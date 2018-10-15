@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Utility.cpp"
+#include <ostream>
 
 class Dial
 {
@@ -27,7 +28,7 @@ public:
 	//Turn dial upwards	  (number decreases)
 	Dial &operator-= (int i);
 
-
+	friend std::ostream &operator<<(std::ostream &o, Dial d);
 };
 
 
@@ -60,3 +61,5 @@ inline Dial &Dial::operator-=(int i)
 	util::modRef(value);
 	return *this;
 }
+
+

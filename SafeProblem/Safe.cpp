@@ -24,10 +24,13 @@ void Safe<NUM_LOCKS, NUM_DIALS>::solveLockParallelized(char const *root, int thr
 			if (!locked[lock * 2 + i]) {
 				locked[lock * 2 + i] = true;
 				
-				locks[lock].CN;
+				Dial *p = locks[lock].CN + (i * NUM_DIALS * sizeof(Dial));
 
 				for (int j = 0; j < NUM_DIALS; ++j) {
-	
+					p[j] = root[j]
+						+ UHF[j] * (lock + i)
+						+ LHF[j] * lock
+						+ PHF[j] * lock;
 				}
 			}
 		}

@@ -19,13 +19,19 @@ int main(char **argv, int argc) {
 	//cout << sizeof(Safe<5,4>) << endl;
 	
 
-	//Safe<5, 4> s;
+	Safe<5, 4> s;
 	
-	//s.generateLockParallelized({ 2,3,4,5 },3);
+	s.UHF[0] = 1;
+	s.LHF[0] = 1;
+	s.PHF[0] = 1;
 
-	Dial d;
+	s.generateLockParallelized({ 0,0,0,0 }, 3);
 
-	d + 6;
+	for (int i = 0; i < 10000; ++i);
+
+	for (int i = 0; i < 5; ++i) {
+		cout << s.locks[i].CN[0] << " " << s.locks[i].LN[0] << endl;
+	}
 
 	int END;
 	cin >> END;

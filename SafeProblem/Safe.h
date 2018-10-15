@@ -7,7 +7,7 @@
 template <int NUM_LOCKS, int NUM_DIALS>
 class Safe
 {
-private:
+public:
 	Lock<NUM_DIALS> locks[NUM_LOCKS];
 	char UHF[NUM_DIALS], LHF[NUM_DIALS], PHF[NUM_DIALS];
 
@@ -15,7 +15,7 @@ private:
 	void solveLockParallelized(char const *root, int threadId);
 
 
-public:
+
 
 	Safe() {};
 	~Safe() {};
