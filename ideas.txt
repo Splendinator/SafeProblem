@@ -1,0 +1,14 @@
+dial.cpp  (override +/-  to turn clockwise/counterclockwise)
+lock.cpp - array of dials   (override [] to index into dials) 
+safe.cpp - array of locks   (override [] to index into locks)
+
+Make sure to use statics where applicable to keep data contiguous   (array of safes should be contiguous chars in memory for each dial if possible)
+
+Hashing algorithms can be done parallel since they can be added to each other.  (Matrix.cpp maybe to calculate all 3 hash numbers quickly (multithreading?))
+
+override ostream to easily output safe (and lock (and dial))
+
+maybe override istream?
+
+
+
