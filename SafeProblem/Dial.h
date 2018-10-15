@@ -6,13 +6,12 @@ class Dial
 {
 private:
 
-	//Can't use unsigned because it fucks with mod() of negative numbers;
+	//TODO: Maybe use shorts or ints because overflow will break program;
 	char value;
 
 
 public:
 	
-
 	Dial(char i = 0);
 	~Dial() {};
 
@@ -31,3 +30,33 @@ public:
 
 };
 
+
+
+inline Dial::Dial(char i) : value(i) {
+	util::modRef(value);
+}
+
+
+inline Dial Dial::operator+(int i)
+{
+	return Dial(value + i);
+}
+
+inline Dial Dial::operator-(int i)
+{
+	return Dial(value - i);
+}
+
+inline Dial &Dial::operator+=(int i)
+{
+	value += i;
+	util::modRef(value);
+	return *this;
+}
+
+inline Dial &Dial::operator-=(int i)
+{
+	value -= i;
+	util::modRef(value);
+	return *this;
+}
