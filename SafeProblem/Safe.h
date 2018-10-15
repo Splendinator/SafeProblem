@@ -8,6 +8,7 @@ class Safe
 {
 private:
 	Lock<NUM_DIALS> locks[NUM_LOCKS];
+	char UHF[NUM_DIALS], LHF[NUM_DIALS], PHF[NUM_DIALS];
 
 public:
 

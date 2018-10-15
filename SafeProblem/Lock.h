@@ -10,13 +10,23 @@ template <int NUM_DIALS>
 class Lock
 {
 private:
-	Dial dials[NUM_DIALS];
+	
+	//Unlock code.
+	Dial CN[NUM_DIALS];
+
+	//What the attacker sees.
+	Dial LN[NUM_DIALS];
+
+	//Hash used as ROOT for next lock.
+	Dial HN[NUM_DIALS];
+
 
 public:
 
 	Lock() {};
 	~Lock() {};
 
+	
 
 };
 
