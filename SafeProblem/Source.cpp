@@ -2,36 +2,43 @@
 #include "Safe.h"
 #include "Utility.h"
 #include "Dial.h"
-
-
-struct sTR {
-	int x = 2, y = 4, z = 6;
-
-};
+#include "Vector.h"
+#include <random>
 
 using namespace std;
 using namespace util;
 
+Vector<Dial,4> UHF, LHF, PHF;
+
+
+
+inline void generateHash() {
+	for (int i = 0; i < 4; ++i) {
+		UHF[i] = (rand() % 19) - 9;
+		LHF[i] = (rand() % 19) - 9;
+		PHF[i] = (rand() % 19) - 9;
+	}		
+}
+
+inline void generateRoot() {
+	//Get initial CN = ROOT + UHF
+	//Get difference (DIF) every iteration (UHF + LHF + PHF)
+	//Just ignore initial CN. Use difference to figure out duplicate numbers 
+	
+	//i.e DIF = (1,0,0,0)
+	//DIF[1] = (2,0,0,0)
+	//DIF[2] = (3,0,0,0)
+	//etc..
+	//root  
+
+}
+
 int main(char **argv, int argc) {
+	generateHash();
 
-	//cout << sizeof(Dial) << endl;
-	//cout << sizeof(Lock<4>) << endl;
-	//cout << sizeof(Safe<5,4>) << endl;
+
+
 	
-
-	Safe<5, 4> s;
-	
-	s.UHF[0] = 1;
-	s.LHF[0] = 1;
-	s.PHF[0] = 1;
-
-	s.generateLockParallelized({ 0,0,0,0 }, 3);
-
-	for (int i = 0; i < 10000; ++i);
-
-	for (int i = 0; i < 5; ++i) {
-		cout << s.locks[i].CN[0] << " " << s.locks[i].LN[0] << endl;
-	}
 
 	int END;
 	cin >> END;
