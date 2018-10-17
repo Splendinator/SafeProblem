@@ -2,7 +2,7 @@
 #include <ostream>
 
 
-//Don't try to create a vector of a type unless said type has + and += operator overloading. Thank you.
+
 template <class E, unsigned int LENGTH>
 class Vector 
 {
@@ -23,14 +23,14 @@ public:
 	//Have to define here or linker error?
 	friend std::ostream &operator<<(std::ostream &os, const Vector &v){
 		
-		os << "(";
 
 		for (int i = 0; i < LENGTH; ++i) {
+			if (v.data[i] > 0) cout << "+";
 			os << v.data[i];
 			if (i != LENGTH - 1) os << ", ";
 		}
 		
-		return os << ")";
+		return os;
 	};
 
 

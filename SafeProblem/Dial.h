@@ -43,6 +43,11 @@ public:
 	//Multiply by a number (then mod())
 	Dial &operator*=(const int i);
 
+	bool operator<(const int i) const { return value < i; }
+	bool operator>(const int i) const { return value > i; };
+
+	
+
 	friend std::ostream &operator<<(std::ostream &o, Dial d);
 };
 
@@ -109,4 +114,6 @@ inline Dial &Dial::operator*=(const int i)
 	util::modRef(value);
 	return *this;
 }
+
+
 
