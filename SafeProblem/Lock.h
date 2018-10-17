@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Dial.h"
+#include "Vector.h"
 
 
 
@@ -14,10 +15,11 @@ class Lock
 public:
 	
 	//Unlock code.
-	Dial CN[NUM_DIALS];
-
+	Vector<Dial, NUM_DIALS> CN;
+		
 	//What the attacker sees.
-	Dial LN[NUM_DIALS];
+	Vector<Dial, NUM_DIALS> LN;
+
 
 	//Hash used as ROOT for next lock.
 	//Dial HN[NUM_DIALS];					(don't need to store this?)

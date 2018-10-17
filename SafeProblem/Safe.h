@@ -7,32 +7,24 @@
 template <unsigned int NUM_LOCKS, unsigned int NUM_DIALS>
 class Safe
 {
-public:
-	Lock<NUM_DIALS> locks[NUM_LOCKS];
-	char *UHF, *LHF, *PHF;
-
+private:
 	//Designed to be ran by threads. Solves all locks in parallel.
 	void solveLockParallelized(char const *root, bool *locked);
 
+public:
+	Lock<NUM_DIALS> locks[NUM_LOCKS];
+	Vector<Dial,NUM_DIALS> *UHF, *LHF, *PHF, DIF;
 
-	Safe(char *uhf, char *lhf, char *phf) : UHF(uhf), LHF(lhf), PHF(phf) {};
+
+	Safe(Vector<Dial, NUM_DIALS> *uhf, Vector<Dial, NUM_DIALS> *lhf, Vector<Dial, NUM_DIALS> *phf) : UHF(uhf), LHF(lhf), PHF(phf) { DIF = *uhf + *lhf + *phf; };
 	~Safe() {};
 
 	void generateLockParallelized(const char (&root)[NUM_DIALS], int numThreads);
 
+	Lock<NUM_DIALS> &operator[](const int x) { return locks[x]; }
+
 };
 
-template<unsigned int NUM_LOCKS, unsigned int NUM_DIALS>
-inline void Safe<NUM_LOCKS, NUM_DIALS>::generateLockParallelized(const char(&root)[NUM_DIALS], int numThreads)
-{
 
-	bool locked[NUM_LOCKS * 2] = {};
-
-	for (int i = 0; i < numThreads; ++i) {
-		std::thread t(&Safe<NUM_LOCKS, NUM_DIALS>::solveLockParallelized, this, root, locked);
-		t.detach();
-	}
-
-}
 
 

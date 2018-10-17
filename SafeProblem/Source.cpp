@@ -34,11 +34,19 @@ inline void generateRoot() {
 }
 
 int main(char **argv, int argc) {
-	generateHash();
-
-
-
 	
+	Dial d[4] = { 1,1,1,1 };
+	UHF = LHF = PHF = d;
+
+	Safe<5,4> s(&UHF,&LHF,&PHF);
+
+	s.generateLockParallelized({ 0,0,0,0 }, 1);
+
+	for (int i = 0; i < 5; ++i) {
+		cout << s[i].CN << " " << s[i].LN << endl;
+	}
+	
+
 
 	int END;
 	cin >> END;
