@@ -26,19 +26,18 @@ inline void generateHash() {
 
 inline void generateRoot() {
 	
-	//Safe<5, 4> s(&UHF, &LHF, &PHF, DIF);
+	
 
 	Safe<5, 4> s[10000];
-
-
 	Dial d[4];
-	Vector<Dial, 4> root;
+	Vector<Dial, 4> root;  
+
 
 	for (int i = 0; i < 10000; ++i) {
-		d[0] = i % 10;
-		d[1] = i % 100 / 10;
-		d[2] = (i % 1000 / 100);
-		d[3] = (i / 1000);
+		d[3] = i % 10;
+		d[2] = i % 100 / 10;
+		d[1] = (i % 1000 / 100);
+		d[0] = (i / 1000);
 		root = d;
 
 		s[i] = Safe<5,4>(&UHF, &LHF, &PHF, DIF);
@@ -48,14 +47,27 @@ inline void generateRoot() {
 	}
 
 	for (int i = 0; i < 10000; ++i) {
-		
-		cout << s[i][0].CN << " | " << s[i][0].LN << endl;
-		cout << s[i][1].CN << " | " << s[i][1].LN << endl;
-		cout << s[i][2].CN << " | " << s[i][2].LN << endl;
-		cout << s[i][3].CN << " | " << s[i][3].LN << endl;
-		cout << s[i][4].CN << " | " << s[i][4].LN << endl;
-		cout << endl;
 
+		d[3] = i % 10;
+		d[2] = i % 100 / 10;
+		d[1] = (i % 1000 / 100);
+		d[0] = (i / 1000);
+
+		for (int j = 0; j < 5; ++j) {
+			if (Vector<Dial, 4>::hasDupes(s[i][j].CN))
+				goto next;
+		}
+		
+
+		cout << d[0] << d[1] << d[2] << d[3] << " | ";
+		cout << s[i][0].CN[0] << s[i][0].CN[1] << s[i][0].CN[2] << s[i][0].CN[3] << " ";
+		cout << s[i][1].CN[0] << s[i][1].CN[1] << s[i][1].CN[2] << s[i][1].CN[3] << " ";
+		cout << s[i][2].CN[0] << s[i][2].CN[1] << s[i][2].CN[2] << s[i][2].CN[3] << " ";
+		cout << s[i][3].CN[0] << s[i][3].CN[1] << s[i][3].CN[2] << s[i][3].CN[3] << " ";
+		cout << s[i][4].CN[0] << s[i][4].CN[1] << s[i][4].CN[2] << s[i][4].CN[3] << endl;
+		
+		next:
+		continue;
 	}
 
 
@@ -65,27 +77,14 @@ inline void generateRoot() {
 }
 
 int main(char **argv, int argc) {
-	
+	srand(60);
 	generateHash();
-
+	
 	cout << "HASH: " << UHF << " | " << LHF << " | " << PHF << " | " << DIF << endl;
-
+	
 	generateRoot();
 
-	//Dial d[4] = { 1,1,1,1 };
-	//UHF = LHF = PHF = d;
-
-	//Safe<5,4> s(&UHF,&LHF,&PHF);
-
-	//s.generateLockParallelized({ 0,0,0,0 }, 1);
-
-	//for (int i = 0; i < 20000; ++i);
-
-	//for (int i = 0; i < 5; ++i) {
-	//	cout << s[i].CN << " " << s[i].LN << endl;
-	//}
-	
-	cout << Dial(-6);
+	//cout << Vector<Dial, 4>::hasDupes(Vector<Dial, 4>({ 2,3,0,7 }));
 
 
 	int END;

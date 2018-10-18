@@ -32,7 +32,7 @@ void Safe<NUM_LOCKS, NUM_DIALS>::solveLocksParallelized(const Vector<Dial, NUM_D
 				locked[lock * 2 + i] = true;
 
 				//Avoid 50:50 if statement, requires CN to be exactly before LN in Lock.h 
-				*(&locks[lock].CN + i) = DIF*lock + *UHF * i;
+				*(&locks[lock].CN + i) = v + (DIF*lock + *UHF * (1-i));
 				
 
 			}
@@ -46,7 +46,7 @@ inline void Safe<NUM_LOCKS, NUM_DIALS>::solveLocks(const Vector<Dial, NUM_DIALS>
 	for (int lock = 0; lock < NUM_LOCKS; ++lock) {
 		for (int i = 0; i < 2; ++i) {
 				//Avoid 50:50 if statement, requires CN to be exactly before LN in Lock.h 
-				*(&locks[lock].CN + i) = DIF*lock + *UHF * i;
+				*(&locks[lock].CN + i) = v + ( DIF*lock + *UHF * (1-i));
 		}
 	}
 }

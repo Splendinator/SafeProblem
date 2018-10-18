@@ -43,8 +43,13 @@ public:
 	//Multiply by a number (then mod())
 	Dial &operator*=(const int i);
 
+	
+	bool operator==(const Dial d) const;
+
 	bool operator<(const int i) const { return value < i; }
 	bool operator>(const int i) const { return value > i; };
+
+
 
 	
 
@@ -113,6 +118,11 @@ inline Dial &Dial::operator*=(const int i)
 	value *= i;
 	util::modRef(value);
 	return *this;
+}
+
+inline bool Dial::operator==(const Dial d) const
+{
+	return value == d.value;
 }
 
 

@@ -19,7 +19,7 @@ public:
 	Vector operator*(const int x) const;
 
 	E &operator[] (int x) { return data[x]; };
-	
+
 	//Have to define here or linker error?
 	friend std::ostream &operator<<(std::ostream &os, const Vector &v){
 		
@@ -33,6 +33,7 @@ public:
 		return os;
 	};
 
+	static bool hasDupes(Vector<E, LENGTH> v);
 
 	~Vector() {};
 };	 
@@ -61,5 +62,14 @@ inline Vector<E, LENGTH> Vector<E, LENGTH>::operator*(const int x) const {
 	return v;
 }
 
-
+template<class E, unsigned int LENGTH>
+inline bool Vector<E, LENGTH>::hasDupes(Vector<E, LENGTH> v)
+{
+	for (int i = 0; i < LENGTH - 1; ++i) {
+		for (int j = i + 1; j < LENGTH; ++j) {
+			if (v[i] == v[j]) return true;
+		}
+	}
+	return false;
+}
 
