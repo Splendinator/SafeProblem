@@ -114,6 +114,7 @@
     <ClInclude Include="Dial.h" />
     <ClInclude Include="Lock.h" />
     <ClInclude Include="Safe.h" />
+    <ClInclude Include="Set.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
@@ -121,6 +122,7 @@
     <ClCompile Include="Dial.cpp" />
     <ClCompile Include="Lock.cpp" />
     <ClCompile Include="Safe.cpp" />
+    <ClCompile Include="Set.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Vector.cpp" />

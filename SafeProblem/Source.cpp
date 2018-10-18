@@ -3,6 +3,7 @@
 #include "Utility.h"
 #include "Dial.h"
 #include "Vector.h"
+#include "Set.h"
 #include <random>
 
 using namespace std;
@@ -82,11 +83,14 @@ int main(char **argv, int argc) {
 	srand(141);
 	generateHash();
 
-	cout << "HASH: " << UHF << " | " << LHF << " | " << PHF << " | " << DIF << endl;
+	//cout << "HASH: " << UHF << " | " << LHF << " | " << PHF << " | " << DIF << endl;
 	
-	generateRoot();
+	//generateRoot();
 
-	//cout << Vector<Dial, 4>::hasDupes(Vector<Dial, 4>({ 2,3,0,7 }));
+	Set s(0b0001000010000010);
+
+	cout << s << endl;
+
 
 
 	int END;
