@@ -1,14 +1,145 @@
-dial.cpp  (override +/-  to turn clockwise/counterclockwise)
-lock.cpp - array of dials   (override [] to index into dials) 
-safe.cpp - array of locks   (override [] to index into locks)
+7784 -- START NUM
 
-Make sure to use statics where applicable to keep data contiguous   (array of safes should be contiguous chars in memory for each dial if possible)
++2 +9 +4 +0
 
-Hashing algorithms can be done parallel since they can be added to each other.  (Matrix.cpp maybe to calculate all 3 hash numbers quickly (multithreading?))
 
-override ostream to easily output safe (and lock (and dial))
 
-maybe override istream?
+AB = {7,4,1,8,5}
+
+A = 0
+B != 1 4 5 7 8
+
+A = 1
+B != 2 5 6 8 9
+
+AC = {2,4,6,8,0}
+BC = !{0,5,0,5,0}
+   = {1,2,3,4,6,7,8,9}
+   = 
+
+AC UNION BC
+{2,4,6,8}
+
+
+AD = !{0,2,4,6,8}
+BD = !{9,8,7,6,5}
+CD = !{0,2,4,6,8}
+
+AD = {1,3,5,7,9}
+CD = {1,3,5,7,9}
+BD = {0,1,2,3,4}
+
+UNION = {1,3}
+
+
+
+
+
+
+This is the difference for this example:
+0 0 9 2
+
+
+
+Step 1- Generate these sets of possible numbers. (All 10 possible combinations)
+KEY: XY {0,...,n}  (The valid numbers Y can be if X is go in the set)
+
+AB = {1,2,3,4,5,6,7,8,9}
+
+
+AC = {9,8,7,6,5}
+
+BC = {9,8,7,6,5}
+
+
+AD = {1,3,5,7,9}
+
+BD = {1,3,5,7,9}
+
+CD = {2,3,5,6,9}
+
+
+
+STEP 2- do them.
+
+
+A = 0
+
+B = AB{1,2,3,4,5,6,7,8,9}
+
+C = AC{9,8,7,6,5} UNION BC[0-9]{{9,8,7,6,5},{0,9,8,7,6},...,{8,7,6,5,4}}
+
+D = ...
+
+
+
+This approach lets us cut out huge ammounts of data (usually half at a time, sometimes less though if N=5 or N=0)
+where N is the "relative difference" between two numbers rate of increasion.
+
+E.G 1 -- Failing Example
+
+A = 0
+B = 1
+C = {9,8,7,6,5} UNION {8,7,6,5,4}
+  = any number from {8,7,6,5}
+    let's go with 8.
+C = 8
+D = {1,3,5,7,9} UNION {2,4,6,8,0} UNION {0,1,3,4,7}
+  = {}  nothing, A and B cancel each other out every time where they both aren't odd or even.
+
+
+E.G 2 -- Winning Example
+
+A = 0
+B = {1,2,3,4,5,6,7,8,9} (let's choose 2 this time)
+B = 2
+C = {9,8,7,6,5} UNION {7,6,5,4,3}
+C = {7,6,5} (lets choose 7)
+C = 7
+D = AD[0] ({1,3,5,7,9}) UNION BD[2] ({1,3,5,7,9}) UNION CD[7] ({0,2,3,6,9})
+D = 3 or 9
+
+FINAL ANSWER(S) for this iteration:
+
+0273
+0279
+
+
+NOTES
+------
+So I guess somehow you could do the algorithm like this:
+
+1. Start with A0 B1 C2 D3
+2. Does it work? 
+(no, it doesn't because we already went through it in EG1)
+
+3. Where was the highest level that is failed? 
+(it failed in two places, C clashes because C needs to be in the set {8,7,6,5}
+(but C is a lower level than B and A so we can look further down)
+(You'll notice A and B fail at AD[0] = {1,3,5,7,9} and BD[1] = {2,4,6,8,0}
+(so the union would be {} and, hence, any combination where A and B are 0 and 1 fail.
+(so we can just jump ahead to 0213 since we know 01XX always fails on AD union BD)
+(This means we have just jumped ahead like 100 combinations in a single iteration)
+(This could also means we could remove 1 from AB[0] since we now know 1 will NEVER be a
+(valid number for B if A is 0. We could then domino this and remove 2 from AB[1], 3 from AB[2] etc.
+(This would mean we have just removed literally an entire 10% of potential roots. In a single iteration.
+(Holy Shit, right?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

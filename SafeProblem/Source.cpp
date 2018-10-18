@@ -15,7 +15,7 @@ Vector<Dial,4> UHF, LHF, PHF, DIF;
 
 inline void generateHash() {
 	for (int i = 0; i < 4; ++i) {
-		UHF[i] = (rand() % 19) - 9;
+		UHF[i] = 0;//(rand() % 19) - 9;
 		LHF[i] = (rand() % 19) - 9;
 		PHF[i] = (rand() % 19) - 9;
 	}		
@@ -70,16 +70,18 @@ inline void generateRoot() {
 		continue;
 	}
 
+}
 
+inline void generateRoot2() {
 
 
 
 }
 
 int main(char **argv, int argc) {
-	srand(60);
+	srand(141);
 	generateHash();
-	
+
 	cout << "HASH: " << UHF << " | " << LHF << " | " << PHF << " | " << DIF << endl;
 	
 	generateRoot();
