@@ -49,7 +49,7 @@ public:
 	bool operator<(const int i) const { return value < i; }
 	bool operator>(const int i) const { return value > i; };
 
-
+	char toChar() const { return value; }
 
 	
 
