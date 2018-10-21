@@ -29,6 +29,8 @@ public:
 
 	Lock<NUM_DIALS> &operator[](const int x) { return locks[x]; }
 
+	friend std::ostream &operator<<(std::ostream &o, const Safe &s);
+
 };
 
 

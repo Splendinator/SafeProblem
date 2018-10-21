@@ -20,12 +20,12 @@ public:
 
 	E &operator[] (int x) { return data[x]; };
 
-	//Have to define here or linker error?
+	
 	friend std::ostream &operator<<(std::ostream &os, const Vector &v){
 		
 
 		for (int i = 0; i < LENGTH; ++i) {
-			if (v.data[i] > 0) cout << "+";
+			if (v.data[i] > 0) os << "+";
 			os << v.data[i];
 			if (i != LENGTH - 1) os << ", ";
 		}

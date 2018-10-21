@@ -50,3 +50,11 @@ inline void Safe<NUM_LOCKS, NUM_DIALS>::solveLocks(const Vector<Dial, NUM_DIALS>
 		}
 	}
 }
+
+
+template<unsigned int NUM_LOCKS, unsigned int NUM_DIALS>
+std::ostream &operator<<(std::ostream & o, const Safe<NUM_LOCKS,NUM_DIALS> &s)
+{
+	
+	return o;
+}

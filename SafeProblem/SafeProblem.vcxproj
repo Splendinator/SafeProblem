@@ -112,6 +112,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Dial.h" />
+    <ClInclude Include="IO.h" />
     <ClInclude Include="Lock.h" />
     <ClInclude Include="Safe.h" />
     <ClInclude Include="Set.h" />
@@ -120,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dial.cpp" />
+    <ClCompile Include="IO.cpp" />
     <ClCompile Include="Lock.cpp" />
     <ClCompile Include="Safe.cpp" />
     <ClCompile Include="Set.cpp" />

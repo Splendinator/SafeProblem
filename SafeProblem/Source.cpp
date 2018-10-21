@@ -4,13 +4,15 @@
 #include "Dial.h"
 #include "Vector.h"
 #include "Set.h"
+#include "IO.h"
 #include <random>
+#include <exception>
 
 using namespace std;
 using namespace util;
 
 Vector<Dial,4> UHF, LHF, PHF, DIF;
-
+Vector<Dial, 4> roots[10000];
 
 
 
@@ -27,11 +29,10 @@ inline void generateHash() {
 
 
 //LINEAR ORDER ROOT GENERATION ALGORITHM
-inline void generateRoot() {
+inline int generateRoot() {
 	
+	Safe<5, 4> safes[10000];
 	
-
-	Safe<5, 4> s[10000];
 	Dial d[4];
 	Vector<Dial, 4> root;  
 
@@ -43,9 +44,9 @@ inline void generateRoot() {
 		d[0] = (i / 1000);
 		root = d;
 
-		s[i] = Safe<5,4>(&UHF, &LHF, &PHF, DIF);
+		safes[i] = Safe<5,4>(&UHF, &LHF, &PHF, DIF);
 
-		s[i].solveLocks(root);
+		safes[i].solveLocks(root);
 
 	}
 
@@ -57,7 +58,7 @@ inline void generateRoot() {
 		d[0] = (i / 1000);
 
 		for (int j = 0; j < 5; ++j) {
-			if (Vector<Dial, 4>::hasDupes(s[i][j].CN))
+			if (Vector<Dial, 4>::hasDupes(safes[i][j].CN))
 				goto next;
 		}
 		
@@ -78,11 +79,13 @@ inline void generateRoot() {
 
 //LOGARITHMIC ORDER ROOT GENERATION ALGORITHM
 //I shant be generalising this one.
-inline void generateRoot2() {
-
+inline int generateRoot2() {
+	int counter = 0;
 	Set s[60];
 	Set *ab = s, *ac = &s[10], *ad = &s[20], *bc = &s[30], *bd = &s[40], *cd = &s[50];	//Sets of possible numbers in the form XY[n] where X is the first dial, n is the number on that dial and Y is another dial.
 																						//i.e  AB[2] = {3,4,5}  means    "If dial A is 2, dial B can be 3,4, or 5."
+	Safe<5, 4> safe(&UHF,&LHF,&PHF);
+	Vector<Dial, 4> root;
 
 
 	char relDif;		//Relative difference in rate of change of two dials.
@@ -118,7 +121,7 @@ inline void generateRoot2() {
 			}
 			for (int c = 0; c < 10; ++c) {
 				if (!ac[a].has(c) || !bc[b].has(c)) {
-					if ((ac[a] & bc[b]) == 0) {				//This if statement checks for any potential redundancies and eliminates them.
+					if ((ac[a] & bc[b]) == 0) {				//This if statement checks for any potential redundancies as we go and eliminates them.
 						for (int i = 0; i < 10; ++i)
 							ab[Dial(a + i).toChar()] -= Dial(char(b) + i).toChar();
 					}
@@ -141,34 +144,37 @@ inline void generateRoot2() {
 						}
 						continue;
 					};
-					Safe<5, 4> s(&UHF, &LHF, &PHF, DIF);
-					s.solveLocks(Vector<Dial, 4>({Dial(a) ,Dial(b), Dial(c), Dial(d) }));
+					root = Vector<Dial, 4>({ Dial(a) ,Dial(b), Dial(c), Dial(d) });
+					safe.solveLocks(root);
+					++counter;
+					roots[counter] = root;
 				}
 			}
 		}
+
+
 	}
 
 	//for (int i = 0; i < 60; ++i)
 	//	cout << s[i] << endl << ((i % 10 == 9) ? "\n" : "");
 	
 
-
+	return counter;
 }
 
 int main(char **argv, int argc) {
 	srand(141);
 	generateHash();
-
-	//cout << "HASH: " << UHF << " | " << LHF << " | " << PHF << " | " << DIF << endl << endl;
 	
-	//generateRoot();
-
-	for (int i = 0; i < 100; ++i) {
-		generateRoot();
+	IO keyfile("../solutions.txt");
+	try {
+		keyfile.printSolutions(roots, UHF, LHF, PHF, generateRoot2());
 	}
-
-
-	cout << "Done";
+	catch (IOException err) {
+		cout << err.what();
+		exit(1);
+	}
+	//IO::printSolutions(roots, UHF, LHF, PHF, generateRoot2());
 
 
 	int END;
