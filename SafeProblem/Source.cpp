@@ -31,7 +31,7 @@ inline void generateHash() {
 //LINEAR ORDER ROOT GENERATION ALGORITHM
 inline int generateRoot() {
 	
-	Safe<5, 4> safes[10000];
+	Safe<5, 4> s[10000];
 	
 	Dial d[4];
 	Vector<Dial, 4> root;  
@@ -44,9 +44,9 @@ inline int generateRoot() {
 		d[0] = (i / 1000);
 		root = d;
 
-		safes[i] = Safe<5,4>(&UHF, &LHF, &PHF, DIF);
+		s[i] = Safe<5,4>(&UHF, &LHF, &PHF, DIF);
 
-		safes[i].solveLocks(root);
+		s[i].solveLocks(root);
 
 	}
 
@@ -58,22 +58,22 @@ inline int generateRoot() {
 		d[0] = (i / 1000);
 
 		for (int j = 0; j < 5; ++j) {
-			if (Vector<Dial, 4>::hasDupes(safes[i][j].CN))
+			if (Vector<Dial, 4>::hasDupes(s[i][j].CN))
 				goto next;
 		}
 		
 
-		//cout << d[0] << d[1] << d[2] << d[3] << " | ";
-		//cout << s[i][0].CN[0] << s[i][0].CN[1] << s[i][0].CN[2] << s[i][0].CN[3] << " ";
-		//cout << s[i][1].CN[0] << s[i][1].CN[1] << s[i][1].CN[2] << s[i][1].CN[3] << " ";
-		//cout << s[i][2].CN[0] << s[i][2].CN[1] << s[i][2].CN[2] << s[i][2].CN[3] << " ";
-		//cout << s[i][3].CN[0] << s[i][3].CN[1] << s[i][3].CN[2] << s[i][3].CN[3] << " ";
-		//cout << s[i][4].CN[0] << s[i][4].CN[1] << s[i][4].CN[2] << s[i][4].CN[3] << endl;
+		cout << d[0] << d[1] << d[2] << d[3] << " | ";
+		cout << s[i][0].CN[0] << s[i][0].CN[1] << s[i][0].CN[2] << s[i][0].CN[3] << " ";
+		cout << s[i][1].CN[0] << s[i][1].CN[1] << s[i][1].CN[2] << s[i][1].CN[3] << " ";
+		cout << s[i][2].CN[0] << s[i][2].CN[1] << s[i][2].CN[2] << s[i][2].CN[3] << " ";
+		cout << s[i][3].CN[0] << s[i][3].CN[1] << s[i][3].CN[2] << s[i][3].CN[3] << " ";
+		cout << s[i][4].CN[0] << s[i][4].CN[1] << s[i][4].CN[2] << s[i][4].CN[3] << endl;
 		
 		next:
 		continue;
 	}
-
+	return 0;
 }
 
 
@@ -94,13 +94,15 @@ inline int generateRoot2() {
 	//Generate Initial Values
 	for (int i = 0; i < 3; ++i) {
 		for (int j = i + 1; j < 4; ++j) {
-			relDif = (DIF[i] - DIF[j]).toChar();
+			relDif = (DIF[i] - DIF[j]).toChar();			//TODO:  MAYBE CAHNGE THIS LINE
 			for (int k = 0; k < 5; ++k)
 				s[temp] |= Dial(relDif * k).toChar();
 			s[temp].inverse();
 			temp += 10;
 		}
 	}
+
+
 
 	//Domino effect to get the rest
 	for (int i = 1; i < 10; ++i) {
@@ -111,6 +113,10 @@ inline int generateRoot2() {
 		bd[i] = bd[i-1] << 1;
 		cd[i] = cd[i-1] << 1;
 	}
+	
+	//Show Sets
+	//for (int i = 0; i < 60; ++i)
+	//	cout << s[i] << endl << ((i % 10 == 9) ? "\n" : "");
 
 	//Smartly try all remaining possible combinations, deleting any impossibilities from future iterations.
 	for (int a = 0; a < 10; ++a) {
@@ -155,8 +161,7 @@ inline int generateRoot2() {
 
 	}
 
-	//for (int i = 0; i < 60; ++i)
-	//	cout << s[i] << endl << ((i % 10 == 9) ? "\n" : "");
+
 	
 
 	return counter;
@@ -166,17 +171,22 @@ int main(char **argv, int argc) {
 	srand(141);
 	generateHash();
 	
-	IO keyfile("../solutions.txt");
-	try {
-		keyfile.printSolutions(roots, UHF, LHF, PHF, generateRoot2());
-	}
-	catch (IOException err) {
-		cout << err.what();
-		exit(1);
-	}
-	//IO::printSolutions(roots, UHF, LHF, PHF, generateRoot2());
+	
 
-
+	//IO keyfile("../solutions.txt");
+	//try {
+	//	keyfile.printSolutions(roots, UHF, LHF, PHF, generateRoot2());
+	//}
+	//catch (IOException err) {
+	//	cout << err.what();
+	//	exit(1);
+	//}
+	//generateRoot();
+	//for (int i = 0; i < 100; ++i) {
+	//	generateRoot2();
+	//}
+	//cout << "Done";
+	//
 	int END;
 	cin >> END;
 
