@@ -63,12 +63,12 @@ inline int generateRoot() {
 		}
 		
 
-		cout << d[0] << d[1] << d[2] << d[3] << " | ";
-		cout << s[i][0].CN[0] << s[i][0].CN[1] << s[i][0].CN[2] << s[i][0].CN[3] << " ";
-		cout << s[i][1].CN[0] << s[i][1].CN[1] << s[i][1].CN[2] << s[i][1].CN[3] << " ";
-		cout << s[i][2].CN[0] << s[i][2].CN[1] << s[i][2].CN[2] << s[i][2].CN[3] << " ";
-		cout << s[i][3].CN[0] << s[i][3].CN[1] << s[i][3].CN[2] << s[i][3].CN[3] << " ";
-		cout << s[i][4].CN[0] << s[i][4].CN[1] << s[i][4].CN[2] << s[i][4].CN[3] << endl;
+		//cout << d[0] << d[1] << d[2] << d[3] << " | ";
+		//cout << s[i][0].CN[0] << s[i][0].CN[1] << s[i][0].CN[2] << s[i][0].CN[3] << " ";
+		//cout << s[i][1].CN[0] << s[i][1].CN[1] << s[i][1].CN[2] << s[i][1].CN[3] << " ";
+		//cout << s[i][2].CN[0] << s[i][2].CN[1] << s[i][2].CN[2] << s[i][2].CN[3] << " ";
+		//cout << s[i][3].CN[0] << s[i][3].CN[1] << s[i][3].CN[2] << s[i][3].CN[3] << " ";
+		//cout << s[i][4].CN[0] << s[i][4].CN[1] << s[i][4].CN[2] << s[i][4].CN[3] << endl;
 		
 		next:
 		continue;
@@ -173,20 +173,17 @@ int main(char **argv, int argc) {
 	
 	
 
-	//IO keyfile("../solutions.txt");
-	//try {
-	//	keyfile.printSolutions(roots, UHF, LHF, PHF, generateRoot2());
-	//}
-	//catch (IOException err) {
-	//	cout << err.what();
-	//	exit(1);
-	//}
-	//generateRoot();
-	//for (int i = 0; i < 100; ++i) {
-	//	generateRoot2();
-	//}
-	//cout << "Done";
-	//
+	IO keyfile("../solutions.txt");
+	try {
+		keyfile.printSolutions(roots, UHF, LHF, PHF, generateRoot2());
+	}
+	catch (IOException err) {
+		cout << err.what();
+		exit(1);
+	}
+	
+
+
 	int END;
 	cin >> END;
 

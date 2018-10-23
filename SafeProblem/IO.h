@@ -26,6 +26,7 @@ public:
 	//Prints all valid solutions for a set UHF,LHF, and PHF combo.
 	//length of the array pointed to by roots should be of length <numRoots>
 	void printSolutions(Vector<Dial, 4> *roots, Vector<Dial, 4> UHF, Vector<Dial, 4> LHF, Vector<Dial, 4> PHF, unsigned int numRoots) throw (IOException);
+	
 };
 
 

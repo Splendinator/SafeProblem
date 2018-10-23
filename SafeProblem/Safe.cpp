@@ -31,7 +31,7 @@ void Safe<NUM_LOCKS, NUM_DIALS>::solveLocksParallelized(const Vector<Dial, NUM_D
 				
 				locked[lock * 2 + i] = true;
 
-				//Avoid 50:50 if statement, requires CN to be exactly before LN in Lock.h 
+				//Avoid 50:50 if statement, requires lock.h to be in the form: CN LN HN
 				*(&locks[lock].CN + i) = v + (DIF*lock + *UHF * (1-i));
 				
 
@@ -43,18 +43,16 @@ void Safe<NUM_LOCKS, NUM_DIALS>::solveLocksParallelized(const Vector<Dial, NUM_D
 template<unsigned int NUM_LOCKS, unsigned int NUM_DIALS>
 inline void Safe<NUM_LOCKS, NUM_DIALS>::solveLocks(const Vector<Dial, NUM_DIALS> &v)
 {
-	for (int lock = 0; lock < NUM_LOCKS; ++lock) {
-		for (int i = 0; i < 2; ++i) {
-				//Avoid 50:50 if statement, requires CN to be exactly before LN in Lock.h 
-				*(&locks[lock].CN + i) = v + ( DIF*lock + *UHF * (1-i));
-		}
+	//*UHF, *LHF, *PHF
+	locks[0].CN = v           + *UHF;
+	locks[0].LN = locks[0].CN + *LHF;
+	locks[0].HN = locks[0].LN + *PHF;
+	for (int i = 1; i < NUM_LOCKS; ++i) {
+		locks[i].CN = v + locks[i-1].HN + *UHF;
+		locks[i].LN = v + locks[i  ].CN + *LHF;
+		locks[i].HN = v + locks[i  ].LN + *PHF;
 	}
 }
 
 
-template<unsigned int NUM_LOCKS, unsigned int NUM_DIALS>
-std::ostream &operator<<(std::ostream & o, const Safe<NUM_LOCKS,NUM_DIALS> &s)
-{
-	
-	return o;
-}
+

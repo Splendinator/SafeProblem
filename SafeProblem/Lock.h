@@ -22,7 +22,7 @@ public:
 
 
 	//Hash used as ROOT for next lock.
-	//Dial HN[NUM_DIALS];					(don't need to store this?)
+	Vector<Dial, NUM_DIALS> HN;
 
 
 
