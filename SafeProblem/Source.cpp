@@ -7,6 +7,7 @@
 #include "IO.h"
 #include <random>
 #include <exception>
+#include <fstream>
 
 using namespace std;
 using namespace util;
@@ -44,7 +45,7 @@ inline int generateRoot() {
 		d[0] = (i / 1000);
 		root = d;
 
-		s[i] = Safe<5,4>(&UHF, &LHF, &PHF, DIF);
+		s[i] = Safe<5,4>(UHF, LHF, PHF, DIF);
 
 		s[i].solveLocks(root);
 
@@ -84,7 +85,7 @@ inline int generateRoot2() {
 	Set s[60];
 	Set *ab = s, *ac = &s[10], *ad = &s[20], *bc = &s[30], *bd = &s[40], *cd = &s[50];	//Sets of possible numbers in the form XY[n] where X is the first dial, n is the number on that dial and Y is another dial.
 																						//i.e  AB[2] = {3,4,5}  means    "If dial A is 2, dial B can be 3,4, or 5."
-	Safe<5, 4> safe(&UHF,&LHF,&PHF);
+	Safe<5, 4> safe(UHF,LHF,PHF);
 	Vector<Dial, 4> root;
 
 
@@ -171,18 +172,22 @@ int main(char **argv, int argc) {
 	srand(141);
 	generateHash();
 	
-	
+	ifstream fs("../safe.txt");
+	Safe<5,4> s;
+	fs >> s;
 
-	IO keyfile("../solutions.txt");
-	try {
-		keyfile.printSolutions(roots, UHF, LHF, PHF, generateRoot2());
-	}
-	catch (IOException err) {
-		cout << err.what();
-		exit(1);
-	}
-	
 
+
+	//IO keyfile("../key.txt");
+	//try {
+	//	keyfile.printKey(roots, UHF, LHF, PHF, generateRoot2());
+	//}
+	//catch (IOException err) {
+	//	cout << err.what();
+	//	exit(1);
+	//}
+	//
+	//
 
 	int END;
 	cin >> END;

@@ -8,7 +8,13 @@ IO::~IO()
 {
 }
 
-void IO::printSolutions(Vector<Dial, 4> *roots, Vector<Dial, 4> UHF, Vector<Dial, 4> LHF, Vector<Dial, 4> PHF, unsigned int numRoots) throw (IOException)
+void IO::printNumSolutions(unsigned int x) throw(IOException)
+{
+	if (!fs.is_open()) throw IOException();
+	fs << "NS " << x << std::endl;
+}
+
+void IO::printKey(Vector<Dial, 4> *roots, Vector<Dial, 4> UHF, Vector<Dial, 4> LHF, Vector<Dial, 4> PHF, unsigned int numRoots) throw (IOException)
 {
 	if (!fs.is_open()) throw IOException();
 	for (int i = 0; i < numRoots; ++i) {
@@ -18,3 +24,5 @@ void IO::printSolutions(Vector<Dial, 4> *roots, Vector<Dial, 4> UHF, Vector<Dial
 		fs << "PHF: " << PHF << std::endl;
 	}
 }
+
+
