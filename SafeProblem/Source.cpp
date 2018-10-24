@@ -79,13 +79,14 @@ inline int generateRoot() {
 
 
 //LOGARITHMIC ORDER ROOT GENERATION ALGORITHM
-//I shant be generalising this one.
 inline int generateRoot2() {
+	const static int NUMLOCKS = 5;
+
 	int counter = 0;
 	Set s[60];
 	Set *ab = s, *ac = &s[10], *ad = &s[20], *bc = &s[30], *bd = &s[40], *cd = &s[50];	//Sets of possible numbers in the form XY[n] where X is the first dial, n is the number on that dial and Y is another dial.
 																						//i.e  AB[2] = {3,4,5}  means    "If dial A is 2, dial B can be 3,4, or 5."
-	Safe<5, 4> safe(UHF,LHF,PHF);
+	Safe<NUMLOCKS, 4> safe(UHF,LHF,PHF);
 	Vector<Dial, 4> root;
 
 
@@ -93,10 +94,9 @@ inline int generateRoot2() {
 	int temp = 0;
 					
 	//Generate Initial Values
-	for (int i = 0; i < 3; ++i) {
+	for (int i = 0; i < 3; ++i) { 
 		for (int j = i + 1; j < 4; ++j) {
-			relDif = (DIF[i] - DIF[j]).toChar();			//TODO:  MAYBE CAHNGE THIS LINE
-			for (int k = 0; k < 5; ++k)
+			relDif = (DIF[i] - DIF[j]).toChar();						for (int k = 0; k < NUMLOCKS; ++k)
 				s[temp] |= Dial(relDif * k).toChar();
 			s[temp].inverse();
 			temp += 10;
@@ -172,9 +172,14 @@ int main(char **argv, int argc) {
 	srand(141);
 	generateHash();
 	
-	ifstream fs("../safe.txt");
-	Safe<5,4> s;
-	fs >> s;
+	IO fs("../safe.txt");
+	
+	Safe<5, 4> s[2];
+
+	fs.readLockedSafe(s);
+
+
+	
 
 
 

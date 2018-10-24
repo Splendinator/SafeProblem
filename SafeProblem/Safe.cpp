@@ -23,6 +23,8 @@ template<unsigned int NUM_LOCKS, unsigned int NUM_DIALS>
 inline void Safe<NUM_LOCKS, NUM_DIALS>::generateLockParallelized(const Vector<Dial, NUM_DIALS>& v, int numThreads)
 {
 
+	ROOT = v;
+
 	bool locked[NUM_LOCKS * 2] = {};
 
 	for (int i = 0; i < numThreads; ++i) {
@@ -38,6 +40,7 @@ inline void Safe<NUM_LOCKS, NUM_DIALS>::generateLockParallelized(const Vector<Di
 template<unsigned int NUM_LOCKS, unsigned int NUM_DIALS>
 void Safe<NUM_LOCKS, NUM_DIALS>::solveLocksParallelized(const Vector<Dial, NUM_DIALS>& v, bool * locked)
 { 
+	
 	for (int lock = 0; lock < NUM_LOCKS; ++lock) {
 		for (int i = 0; i < 2; ++i) {
 			if (!locked[lock * 2 + i]) {
@@ -53,10 +56,35 @@ void Safe<NUM_LOCKS, NUM_DIALS>::solveLocksParallelized(const Vector<Dial, NUM_D
 	}
 }
 
+//template<unsigned int NUM_LOCKS, unsigned int NUM_DIALS>
+//Vector<Dial, NUM_DIALS> Safe<NUM_LOCKS, NUM_DIALS>::readDials(std::istream & is)
+//{
+//	char c[NUM_DIALS];
+//	int x;
+//
+//	for (int i = 0; i < NUM_DIALS; ++i) {
+//		while (!((is >> c[i], c[i]) >= 48 && c[i] <= 57) && !c[i] == '+' && !c[i] == '-') {
+//			if (c[i] == '+' || c[i] == '-') {
+//				is >> x;
+//				c[i] = x;
+//			}
+//			else {
+//				c[i] -= 48;
+//			}
+//		}
+//		std::cout << c[i];
+//
+//	}
+//
+//	
+//	
+//	return Vector<Dial, NUM_DIALS>();
+//}
+
 template<unsigned int NUM_LOCKS, unsigned int NUM_DIALS>
 inline void Safe<NUM_LOCKS, NUM_DIALS>::solveLocks(const Vector<Dial, NUM_DIALS> &v)
 {
-	//*UHF, *LHF, *PHF
+	ROOT = v;
 	locks[0].CN = v           + UHF;
 	locks[0].LN = locks[0].CN + LHF;
 	locks[0].HN = locks[0].LN + PHF;
