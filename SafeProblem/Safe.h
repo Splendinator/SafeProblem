@@ -34,7 +34,7 @@ public:
 
 	Lock<NUM_DIALS> &operator[](const int x) { return locks[x]; }
 
-
+	bool isInOrder();
 
 
 

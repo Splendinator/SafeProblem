@@ -104,4 +104,20 @@ inline void Safe<NUM_LOCKS, NUM_DIALS>::solveLocks(const Vector<Dial, NUM_DIALS>
 	}
 }
 
+template<unsigned int NUM_LOCKS, unsigned int NUM_DIALS>
+bool Safe<NUM_LOCKS, NUM_DIALS>::isInOrder()
+{
+	int left, right, total;
+	for (int i = 0; i < NUM_LOCKS; ++i) {
+		total = 0;
+		for (int j = 0; j < NUM_DIALS; ++j)
+			total += locks[i].CN[j].toChar();
+		if (total%2) return false;
+		if (i == 0) left = total;
+		if (i == NUM_LOCKS - 1) right = total;
+	}
+
+	return left < right;
+}
+
 

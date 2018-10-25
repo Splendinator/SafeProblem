@@ -8,6 +8,7 @@
 #include <random>
 #include <exception>
 #include <fstream>
+#include "Source.h"
 
 using namespace std;
 using namespace util;
@@ -81,7 +82,7 @@ inline void generateHash() {
 const static int NUMLOCKS = 5;
 
 //LOGARITHMIC ORDER ROOT GENERATION ALGORITHM
-inline int generateRoot2(void *safes) {
+inline int generateRoot2(void *safes, bool bonus) {
 	
 
 	Safe<NUMLOCKS, 4> *safe = (Safe<NUMLOCKS, 4> *)safes;
@@ -159,7 +160,9 @@ inline int generateRoot2(void *safes) {
 					root = root - UHF;
 					safe[counter].solveLocks(root);
 					roots[counter] = root;
+					if (bonus && !safe[counter].isInOrder()) --counter;
 					++counter;
+				
 				}
 			}
 		}
@@ -245,8 +248,7 @@ int main(char **argv, int argc) {
 	Safe<5, 4> safes[10000];
 	Vector<Dial, 4> hashes[10000];
 
-	for (int i = 0; i < 10000; ++i)
-		safes[i] = Safe<5,4>(UHF, LHF, PHF, DIF);
+	
 
 	//CW1
 	IO keyFile("../key.txt");
@@ -256,41 +258,59 @@ int main(char **argv, int argc) {
 	IO lockedFile("../locked.txt");
 	IO solvedKeyFile("../keySolved.txt");
 	
-
+	int IN = 0;
 
 	cout << "What would you like to do?" << endl
-		 << "1 - Generate safes from a random hash" << endl 
-		 << "2 - " 
+		<< "1 - Generate safes from a random hash into key.txt, safe.txt, and locked.txt" << endl
+		<< "2 - Crack the safes in locked.txt and store all valid hash combinations in keySolved.txt" << endl;
+	while (IN != 1 && IN != 2) 
+		cin >> IN;
+
+
 
 	try {
 		//CW1 - Generate
-		keyFile.printKey(roots, UHF, LHF, PHF, numSafes);
-		safeFile.printMultiSafe(safes, numSafes);
-		lockedFile.printLockedSafe(safes,numSafes);
-	
-		//CW2
-		numSafes = lockedFile.readLockedSafe(safes);
+		if (IN == 1) {
+			cout << "Choose a seed: ";
+			cin >> IN;
+			srand(IN);
+			generateHash();
+			for (int i = 0; i < 10000; ++i)
+				safes[i] = Safe<5, 4>(UHF, LHF, PHF, DIF);
+
+			char c;
+			cout << "BONUS_MULTI_SAFE? (Y/N): ";
+			cin >> c;
+
+			numSafes = generateRoot2(safes,(c=='Y' || c == 'y'));
+			cout << "Generating safes using the following hashes:" << endl
+				<< "UHF: " << UHF << endl
+				<< "LHP: " << LHF << endl
+				<< "PHF: " << PHF << endl;
+			keyFile.printKey(roots, UHF, LHF, PHF, numSafes);
+			safeFile.printMultiSafe(safes, numSafes);
+			lockedFile.printLockedSafe(safes, numSafes);
+			goto end;
+		}
+		else {
+			//CW2
+			numSafes = lockedFile.readLockedSafe(safes);
+			numSafes = findHash(safes, numSafes, hashes);
+			for (int i = 0; i < numSafes; ++i) {
+				safes[i] = Safe<5, 4>(hashes[3 * i], hashes[3 * i + 1], hashes[3 * i + 2]);
+			}
+			solvedKeyFile.printKey(safes, numSafes);
+		}
 	}
 	catch (IOException err) {
 		cout << err.what();
 		exit(1);
 	}
 	
-	numSafes = findHash(safes, numSafes, hashes);
-	for (int i = 0; i < numSafes; ++i) {
-		safes[i] = Safe<5,4>(hashes[3 * i], hashes[3 * i + 1], hashes[3 * i + 2]);
-	}
 
-	try {
-		solvedKeyFile.printKey(safes, numSafes);
-	}
-	catch (IOException err) {
-		cout << err.what();
-		exit(1);
-	}
+	end:
 
-	
-
+	cout << "Program finished, input any number to exit" << endl;
 	int END;
 	cin >> END;
 
