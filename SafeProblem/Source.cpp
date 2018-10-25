@@ -17,9 +17,10 @@ Vector<Dial, 4> roots[10000];
 
 
 
+
 inline void generateHash() {
 	for (int i = 0; i < 4; ++i) {
-		UHF[i] = 0;//(rand() % 19) - 9;
+		UHF[i] = (rand() % 19) - 9;
 		LHF[i] = (rand() % 19) - 9;
 		PHF[i] = (rand() % 19) - 9;
 	}		
@@ -30,63 +31,66 @@ inline void generateHash() {
 
 
 //LINEAR ORDER ROOT GENERATION ALGORITHM
-inline int generateRoot() {
-	
-	Safe<5, 4> s[10000];
-	
-	Dial d[4];
-	Vector<Dial, 4> root;  
+//inline int generateRoot() {
+//	
+//	Safe<5, 4> s[10000];
+//	
+//	Dial d[4];
+//	Vector<Dial, 4> root;  
+//
+//
+//	for (int i = 0; i < 10000; ++i) {
+//		d[3] = i % 10;
+//		d[2] = i % 100 / 10;
+//		d[1] = (i % 1000 / 100);
+//		d[0] = (i / 1000);
+//		root = d;
+//
+//		s[i] = Safe<5,4>(UHF, LHF, PHF, DIF);
+//
+//		s[i].solveLocks(root);
+//
+//	}
+//
+//	for (int i = 0; i < 10000; ++i) {
+//
+//		d[3] = i % 10;
+//		d[2] = i % 100 / 10;
+//		d[1] = (i % 1000 / 100);
+//		d[0] = (i / 1000);
+//
+//		for (int j = 0; j < 5; ++j) {
+//			if (Vector<Dial, 4>::hasDupes(s[i][j].CN))
+//				goto next;
+//		}
+//		
+//
+//		//cout << d[0] << d[1] << d[2] << d[3] << " | ";
+//		//cout << s[i][0].CN[0] << s[i][0].CN[1] << s[i][0].CN[2] << s[i][0].CN[3] << " ";
+//		//cout << s[i][1].CN[0] << s[i][1].CN[1] << s[i][1].CN[2] << s[i][1].CN[3] << " ";
+//		//cout << s[i][2].CN[0] << s[i][2].CN[1] << s[i][2].CN[2] << s[i][2].CN[3] << " ";
+//		//cout << s[i][3].CN[0] << s[i][3].CN[1] << s[i][3].CN[2] << s[i][3].CN[3] << " ";
+//		//cout << s[i][4].CN[0] << s[i][4].CN[1] << s[i][4].CN[2] << s[i][4].CN[3] << endl;
+//		
+//		next:
+//		continue;
+//	}
+//	return 0;
+//}
 
-
-	for (int i = 0; i < 10000; ++i) {
-		d[3] = i % 10;
-		d[2] = i % 100 / 10;
-		d[1] = (i % 1000 / 100);
-		d[0] = (i / 1000);
-		root = d;
-
-		s[i] = Safe<5,4>(UHF, LHF, PHF, DIF);
-
-		s[i].solveLocks(root);
-
-	}
-
-	for (int i = 0; i < 10000; ++i) {
-
-		d[3] = i % 10;
-		d[2] = i % 100 / 10;
-		d[1] = (i % 1000 / 100);
-		d[0] = (i / 1000);
-
-		for (int j = 0; j < 5; ++j) {
-			if (Vector<Dial, 4>::hasDupes(s[i][j].CN))
-				goto next;
-		}
-		
-
-		//cout << d[0] << d[1] << d[2] << d[3] << " | ";
-		//cout << s[i][0].CN[0] << s[i][0].CN[1] << s[i][0].CN[2] << s[i][0].CN[3] << " ";
-		//cout << s[i][1].CN[0] << s[i][1].CN[1] << s[i][1].CN[2] << s[i][1].CN[3] << " ";
-		//cout << s[i][2].CN[0] << s[i][2].CN[1] << s[i][2].CN[2] << s[i][2].CN[3] << " ";
-		//cout << s[i][3].CN[0] << s[i][3].CN[1] << s[i][3].CN[2] << s[i][3].CN[3] << " ";
-		//cout << s[i][4].CN[0] << s[i][4].CN[1] << s[i][4].CN[2] << s[i][4].CN[3] << endl;
-		
-		next:
-		continue;
-	}
-	return 0;
-}
-
+const static int NUMLOCKS = 5;
 
 //LOGARITHMIC ORDER ROOT GENERATION ALGORITHM
-inline int generateRoot2() {
-	const static int NUMLOCKS = 5;
+inline int generateRoot2(void *safes) {
+	
+
+	Safe<NUMLOCKS, 4> *safe = (Safe<NUMLOCKS, 4> *)safes;
 
 	int counter = 0;
 	Set s[60];
 	Set *ab = s, *ac = &s[10], *ad = &s[20], *bc = &s[30], *bd = &s[40], *cd = &s[50];	//Sets of possible numbers in the form XY[n] where X is the first dial, n is the number on that dial and Y is another dial.
 																						//i.e  AB[2] = {3,4,5}  means    "If dial A is 2, dial B can be 3,4, or 5."
-	Safe<NUMLOCKS, 4> safe(UHF,LHF,PHF);
+	
 	Vector<Dial, 4> root;
 
 
@@ -152,9 +156,10 @@ inline int generateRoot2() {
 						continue;
 					};
 					root = Vector<Dial, 4>({ Dial(a) ,Dial(b), Dial(c), Dial(d) });
-					safe.solveLocks(root);
-					++counter;
+					root = root - UHF;
+					safe[counter].solveLocks(root);
 					roots[counter] = root;
+					++counter;
 				}
 			}
 		}
@@ -168,31 +173,81 @@ inline int generateRoot2() {
 	return counter;
 }
 
+inline void findHash(void *safes, int numSafes) {
+
+	Safe<5, 4> *s = (Safe<5, 4> *)safes;
+
+	Vector<Dial, 4> dif = s[0][1].LN - s[0][0].LN;
+	Vector<Dial, 4> target = (s[0][0].LN - s[0].ROOT);		//CHF + LHF;
+	Vector<Dial, 4> phf = dif - target;
+
+	Set schf[4] = { 2047,2047,2047,2047 };
+	
+	for (int i = 0; i < numSafes; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			for (int k = 0; k < 4; ++k) {
+				if (k == i) continue;
+				s[i].ROOT[j];
+			}
+		}
+	}
+	
+
+
+}
+
+
 int main(char **argv, int argc) {
 	srand(141);
 	generateHash();
+
+	cout << UHF << endl;
+	cout << LHF << endl;
+	cout << PHF << endl;
+	cout << DIF << endl;
+	cout << endl;
+
 	
-	IO fs("../safe.txt");
+	int numSafes;
+	Safe<5, 4> safes[10000];
 	
-	Safe<5, 4> s[2];
+	for (int i = 0; i < 10000; ++i)
+		safes[i] = Safe<5,4>(UHF, LHF, PHF, DIF);
 
-	fs.readLockedSafe(s);
-
-
+	//CW1
+	IO keyFile("../key.txt");
+	IO safeFile("../safe.txt");
+	
+	//CW2
+	IO lockedFile("../locked.txt");
+	IO solvedKeyFile("../keySolved.txt");
+	IO solvedSafeFile("../safeSolved.txt");
 	
 
+	numSafes = generateRoot2(safes);
 
+//Option to generate safes randomly.
+//Option to read them in from a key file.
 
-	//IO keyfile("../key.txt");
-	//try {
-	//	keyfile.printKey(roots, UHF, LHF, PHF, generateRoot2());
-	//}
-	//catch (IOException err) {
-	//	cout << err.what();
-	//	exit(1);
-	//}
-	//
-	//
+//Option to decode safes from a locked file.
+
+	try {
+		//CW1 - Generate
+		keyFile.printKey(roots, UHF, LHF, PHF, numSafes);
+		safeFile.printMultiSafe(safes, numSafes);
+		lockedFile.printLockedSafe(safes,numSafes);
+	
+		//CW2
+		numSafes = lockedFile.readLockedSafe(safes);
+		safeFile.printMultiSafe(safes, numSafes);
+	}
+	catch (IOException err) {
+		cout << err.what();
+		exit(1);
+	}
+	
+	findHash(safes, numSafes);
+	
 
 	int END;
 	cin >> END;

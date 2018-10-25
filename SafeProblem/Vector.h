@@ -17,9 +17,10 @@ public:
 	Vector &operator+=(const Vector &v);
 	//Vector &operator=(const Vector &v){};
 	Vector operator*(const int x) const;
+	Vector operator-(const Vector &v) const;
 
 	E &operator[] (int x) { return data[x]; };
-
+	E operator[] (int x) const { return data[x]; };
 	
 	friend std::ostream &operator<<(std::ostream &os, const Vector &v){
 		
@@ -60,6 +61,15 @@ inline Vector<E, LENGTH> Vector<E, LENGTH>::operator*(const int x) const {
 	for (int i = 0; i < LENGTH; ++i)
 		v.data[i] *= x;
 	return v;
+}
+
+template<class E, unsigned int LENGTH>
+inline Vector<E, LENGTH> Vector<E, LENGTH>::operator-(const Vector & v) const
+{
+	Vector<E, LENGTH> ret = data;
+	for (int i = 0; i < LENGTH; ++i)
+		ret.data[i] -= v.data[i];
+	return ret;
 }
 
 template<class E, unsigned int LENGTH>

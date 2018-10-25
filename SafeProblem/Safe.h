@@ -21,7 +21,7 @@ public:
 	Vector<Dial,NUM_DIALS> ROOT;
 
 
-	Safe() {};
+	Safe();
 
 	Safe(Vector<Dial, NUM_DIALS> uhf, Vector<Dial, NUM_DIALS> lhf, Vector<Dial, NUM_DIALS> phf);
 	Safe(Vector<Dial, NUM_DIALS> uhf, Vector<Dial, NUM_DIALS> lhf, Vector<Dial, NUM_DIALS> phf, const Vector<Dial, NUM_DIALS> &dif);
@@ -75,10 +75,18 @@ public:
 
 	friend std::ostream &operator<<(std::ostream &os, const Safe<NUM_LOCKS, NUM_DIALS> &safe) {
 	
-		os << "ROOT: " << safe.ROOT << std::endl;
-		os << "UHF: " << safe.UHF << std::endl;
-		os << "LHF: " << safe.LHF << std::endl;
-		os << "PHF: " << safe.PHF << std::endl;
+		os << "VALID" << std::endl;
+		for (int i = 0; i < NUM_LOCKS; ++i) {
+			os << "CN" << i << " " << safe.locks[i].CN[0] << safe.locks[i].CN[1] << safe.locks[i].CN[2] << safe.locks[i].CN[3] << " ";
+			os << "LN" << i << " " << safe.locks[i].LN[0] << safe.locks[i].LN[1] << safe.locks[i].LN[2] << safe.locks[i].LN[3] << " ";
+			os << "HN" << i << " " << safe.locks[i].HN[0] << safe.locks[i].HN[1] << safe.locks[i].HN[2] << safe.locks[i].HN[3] << " ";
+			os << std::endl;
+		}
+
+		//os << "ROOT: " << safe.ROOT << std::endl;
+		//os << "UHF: " << safe.UHF << std::endl;
+		//os << "LHF: " << safe.LHF << std::endl;
+		//os << "PHF: " << safe.PHF << std::endl;
 
 		return os;
 	}

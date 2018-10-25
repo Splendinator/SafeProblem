@@ -82,7 +82,7 @@ inline Set Set::operator<<(int x)
 
 inline Set & Set::operator++()
 {
-	data << 1;
+	data << 1; 
 	trim();
 	return *this;
 }

@@ -7,14 +7,23 @@ template Safe<5, 4>;
 
 
 template<unsigned int NUM_LOCKS, unsigned int NUM_DIALS>
-Safe<NUM_LOCKS, NUM_DIALS>::Safe(Vector<Dial, NUM_DIALS> uhf, Vector<Dial, NUM_DIALS> lhf, Vector<Dial, NUM_DIALS> phf)
+Safe<NUM_LOCKS, NUM_DIALS>::Safe()
+{
+	*(char *)&UHF = -1;
+	*(char *)&LHF = -1;
+	*(char *)&PHF = -1;
+	*(char *)&ROOT = -1;
+}
+
+template<unsigned int NUM_LOCKS, unsigned int NUM_DIALS>
+Safe<NUM_LOCKS, NUM_DIALS>::Safe(Vector<Dial, NUM_DIALS> uhf, Vector<Dial, NUM_DIALS> lhf, Vector<Dial, NUM_DIALS> phf) : UHF(uhf), LHF(lhf), PHF(phf)
 {
 	DIF = uhf + lhf + phf;
 	*(char *)&ROOT = -1;		//Signal that root is uninitialised.
 }
 
 template<unsigned int NUM_LOCKS, unsigned int NUM_DIALS>
-Safe<NUM_LOCKS, NUM_DIALS>::Safe(Vector<Dial, NUM_DIALS> uhf, Vector<Dial, NUM_DIALS> lhf, Vector<Dial, NUM_DIALS> phf, const Vector<Dial, NUM_DIALS>& dif)
+Safe<NUM_LOCKS, NUM_DIALS>::Safe(Vector<Dial, NUM_DIALS> uhf, Vector<Dial, NUM_DIALS> lhf, Vector<Dial, NUM_DIALS> phf, const Vector<Dial, NUM_DIALS>& dif) : UHF(uhf), LHF(lhf), PHF(phf), DIF(dif)
 {
 	*(char *)&ROOT = -1;
 }
@@ -89,9 +98,9 @@ inline void Safe<NUM_LOCKS, NUM_DIALS>::solveLocks(const Vector<Dial, NUM_DIALS>
 	locks[0].LN = locks[0].CN + LHF;
 	locks[0].HN = locks[0].LN + PHF;
 	for (int i = 1; i < NUM_LOCKS; ++i) {
-		locks[i].CN = v + locks[i-1].HN + UHF;
-		locks[i].LN = v + locks[i  ].CN + LHF;
-		locks[i].HN = v + locks[i  ].LN + PHF;
+		locks[i].CN = locks[i-1].HN + UHF;
+		locks[i].LN = locks[i  ].CN + LHF;
+		locks[i].HN = locks[i  ].LN + PHF;
 	}
 }
 

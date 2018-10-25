@@ -7,7 +7,7 @@ class Dial
 {
 private:
 
-	//TODO: Maybe use shorts or ints because overflow will break program;
+	
 	char value;
 
 

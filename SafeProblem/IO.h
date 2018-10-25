@@ -15,16 +15,16 @@ struct IOException : public std::exception {
 
 
 class IO
-{
-private: 
+{	
+private:
 	std::fstream fs;
 
 public:
 
-	
+
 
 	IO(std::string filepath) : fs(filepath) {};
-	~IO();
+	~IO() { fs.close(); };
 
 	void printNumSolutions(unsigned int x) throw (IOException);
 	 
@@ -35,9 +35,13 @@ public:
 	
 	//void printLockedSafe(const Safe<5, 4> &s) throw(IOException);
 	
-	void printLockedSafe(const Safe<5,4> &s) throw(IOException);
+	void printLockedSafe(Safe<5, 4> *s, int numSafes) throw(IOException);
 
-	void readLockedSafe(Safe<5, 4> *safe);
+	void printMultiSafe(Safe<5, 4> *safes, int numSafes) throw(IOException);
+
+	int readLockedSafe(Safe<5, 4> *safe) throw(IOException);
+
+	
 
 };
 
