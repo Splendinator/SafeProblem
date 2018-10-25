@@ -32,6 +32,7 @@ public:
 	//length of the array pointed to by roots should be of length <numRoots>
 	void printKey(Vector<Dial, 4> *roots, Vector<Dial, 4> UHF, Vector<Dial, 4> LHF, Vector<Dial, 4> PHF, unsigned int numRoots) throw (IOException);
 
+	void printKey(Safe<5, 4> *s, int numSafes) throw(IOException);
 	
 	//void printLockedSafe(const Safe<5, 4> &s) throw(IOException);
 	
@@ -40,6 +41,7 @@ public:
 	void printMultiSafe(Safe<5, 4> *safes, int numSafes) throw(IOException);
 
 	int readLockedSafe(Safe<5, 4> *safe) throw(IOException);
+
 
 	
 

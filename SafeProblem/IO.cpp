@@ -25,6 +25,20 @@ void IO::printKey(Vector<Dial, 4> *roots, Vector<Dial, 4> UHF, Vector<Dial, 4> L
 	}
 }
 
+void IO::printKey(Safe<5, 4>* s, int numSafes) throw(IOException)
+{
+	if (!fs.is_open()) throw IOException();
+	printNumSolutions(numSafes);
+
+	for (int i = 0; i < numSafes; ++i) {
+		fs << "ROOT: " << s[i].ROOT << std::endl;
+		fs << "UHF: " << s[i].UHF << std::endl;
+		fs << "LHF: " << s[i].LHF << std::endl;
+		fs << "PHF: " << s[i].PHF << std::endl;
+	}
+}
+
+
 void IO::printLockedSafe(Safe<5, 4> *s, int numSafes) throw(IOException)
 {
 

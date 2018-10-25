@@ -173,7 +173,9 @@ inline int generateRoot2(void *safes) {
 	return counter;
 }
 
-inline void findHash(void *safes, int numSafes) {
+inline int findHash(void *safes, int numSafes, Vector<Dial, 4> *hashes) {
+
+	int counter = 0;
 
 	Safe<5, 4> *s = (Safe<5, 4> *)safes;
 
@@ -181,36 +183,68 @@ inline void findHash(void *safes, int numSafes) {
 	Vector<Dial, 4> target = (s[0][0].LN - s[0].ROOT);		//CHF + LHF;
 	Vector<Dial, 4> phf = dif - target;
 
-	Set schf[4] = { 2047,2047,2047,2047 };
-	
+
+	Set a[4] = { 2047,2047,2047,2047 };
+	Set b[4] = { 2047,2047,2047,2047 };
+	Set c[4] = { 2047,2047,2047,2047 };
+	Set d[4] = { 2047,2047,2047,2047 };
+
+
+
+
+
 	for (int i = 0; i < numSafes; ++i) {
 		for (int j = 0; j < 4; ++j) {
-			for (int k = 0; k < 4; ++k) {
-				if (k == i) continue;
-				s[i].ROOT[j];
+			for (int k = 0; k < 5; ++k) {
+
+				if (j != 0) a[j] -= char(((s[i].ROOT[j] - s[i].ROOT[0]).toChar()) + Dial(((dif[j] - dif[0]).toChar()*k)).toChar());
+				if (j != 1) b[j] -= char(((s[i].ROOT[j] - s[i].ROOT[1]).toChar()) + Dial(((dif[j] - dif[1]).toChar()*k)).toChar());
+				if (j != 2) c[j] -= char(((s[i].ROOT[j] - s[i].ROOT[2]).toChar()) + Dial(((dif[j] - dif[2]).toChar()*k)).toChar());
+				if (j != 3) d[j] -= char(((s[i].ROOT[j] - s[i].ROOT[3]).toChar()) + Dial(((dif[j] - dif[3]).toChar()*k)).toChar());
+
 			}
 		}
 	}
 	
+	
+	//cout << a[1] << endl << a[2] << endl << a[3] << endl << endl;
+	//cout << b[0] << endl << b[2] << endl << b[3] << endl << endl;
+	//cout << c[0] << endl << c[1] << endl << c[3] << endl << endl;
+	//cout << d[0] << endl << d[1] << endl << d[2] << endl << endl;
 
+	//Using b[0] AS AB
+	//Using c[0] AS AC | Using C[1] as BC
+	//Using d[0] AS AD...
+
+	for (char ap = 0; ap < 10; ++ap) {
+		for (char bp = 0; bp < 10; ++bp) {
+			if (!((b[0] << ap).has(bp))) continue;
+			for (char cp = 0; cp < 10; ++cp) {
+				if (!(((c[0] << ap).has(cp)) || ((c[1] << bp).has(cp)))) continue;
+				for (char dp = 0; dp < 10; ++dp) {
+					if (!(((d[0] << ap).has(dp)) || ((d[1] << bp).has(dp)) || ((d[2] << cp).has(dp)))) continue;
+					
+					hashes[counter++] = Vector<Dial, 4>({ ap,bp,cp,dp });
+					hashes[counter++] = target - hashes[counter - 1];
+					hashes[counter++] = phf;
+					
+				
+				}
+			}
+		}
+	}
+	
+	return counter / 3;
 
 }
 
 
-int main(char **argv, int argc) {
-	srand(141);
-	generateHash();
-
-	cout << UHF << endl;
-	cout << LHF << endl;
-	cout << PHF << endl;
-	cout << DIF << endl;
-	cout << endl;
-
+int main(char **argv, int argc) {		
 	
 	int numSafes;
 	Safe<5, 4> safes[10000];
-	
+	Vector<Dial, 4> hashes[10000];
+
 	for (int i = 0; i < 10000; ++i)
 		safes[i] = Safe<5,4>(UHF, LHF, PHF, DIF);
 
@@ -221,15 +255,12 @@ int main(char **argv, int argc) {
 	//CW2
 	IO lockedFile("../locked.txt");
 	IO solvedKeyFile("../keySolved.txt");
-	IO solvedSafeFile("../safeSolved.txt");
 	
 
-	numSafes = generateRoot2(safes);
 
-//Option to generate safes randomly.
-//Option to read them in from a key file.
-
-//Option to decode safes from a locked file.
+	cout << "What would you like to do?" << endl
+		 << "1 - Generate safes from a random hash" << endl 
+		 << "2 - " 
 
 	try {
 		//CW1 - Generate
@@ -239,14 +270,25 @@ int main(char **argv, int argc) {
 	
 		//CW2
 		numSafes = lockedFile.readLockedSafe(safes);
-		safeFile.printMultiSafe(safes, numSafes);
 	}
 	catch (IOException err) {
 		cout << err.what();
 		exit(1);
 	}
 	
-	findHash(safes, numSafes);
+	numSafes = findHash(safes, numSafes, hashes);
+	for (int i = 0; i < numSafes; ++i) {
+		safes[i] = Safe<5,4>(hashes[3 * i], hashes[3 * i + 1], hashes[3 * i + 2]);
+	}
+
+	try {
+		solvedKeyFile.printKey(safes, numSafes);
+	}
+	catch (IOException err) {
+		cout << err.what();
+		exit(1);
+	}
+
 	
 
 	int END;
