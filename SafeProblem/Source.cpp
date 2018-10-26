@@ -10,11 +10,15 @@
 #include <fstream>
 #include "Source.h"
 
+#pragma comment(linker, "/STACK:2000000")
+
 using namespace std;
 using namespace util;
 
 Vector<Dial,4> UHF, LHF, PHF, DIF;
 Vector<Dial, 4> roots[10000];
+
+const int NUMLOCKS = IO::NUMLOCKS;
 
 
 
@@ -79,7 +83,7 @@ inline void generateHash() {
 //	return 0;
 //}
 
-const static int NUMLOCKS = 5;
+
 
 //LOGARITHMIC ORDER ROOT GENERATION ALGORITHM
 inline int generateRoot2(void *safes, bool bonus) {
@@ -180,7 +184,7 @@ inline int findHash(void *safes, int numSafes, Vector<Dial, 4> *hashes) {
 
 	int counter = 0;
 
-	Safe<5, 4> *s = (Safe<5, 4> *)safes;
+	Safe<NUMLOCKS, 4> *s = (Safe<NUMLOCKS, 4> *)safes;
 
 	Vector<Dial, 4> dif = s[0][1].LN - s[0][0].LN;
 	Vector<Dial, 4> target = (s[0][0].LN - s[0].ROOT);		//CHF + LHF;
@@ -198,7 +202,7 @@ inline int findHash(void *safes, int numSafes, Vector<Dial, 4> *hashes) {
 
 	for (int i = 0; i < numSafes; ++i) {
 		for (int j = 0; j < 4; ++j) {
-			for (int k = 0; k < 5; ++k) {
+			for (int k = 0; k < NUMLOCKS; ++k) {
 
 				if (j != 0) a[j] -= char(((s[i].ROOT[j] - s[i].ROOT[0]).toChar()) + Dial(((dif[j] - dif[0]).toChar()*k)).toChar());
 				if (j != 1) b[j] -= char(((s[i].ROOT[j] - s[i].ROOT[1]).toChar()) + Dial(((dif[j] - dif[1]).toChar()*k)).toChar());
@@ -245,15 +249,13 @@ inline int findHash(void *safes, int numSafes, Vector<Dial, 4> *hashes) {
 int main(char **argv, int argc) {		
 	
 	int numSafes;
-	Safe<5, 4> safes[10000];
+	Safe<NUMLOCKS, 4> safes[10000];
 	Vector<Dial, 4> hashes[10000];
-
-	
 
 	//CW1
 	IO keyFile("../key.txt");
 	IO safeFile("../safe.txt");
-	
+								
 	//CW2
 	IO lockedFile("../locked.txt");
 	IO solvedKeyFile("../keySolved.txt");
@@ -276,7 +278,7 @@ int main(char **argv, int argc) {
 			srand(IN);
 			generateHash();
 			for (int i = 0; i < 10000; ++i)
-				safes[i] = Safe<5, 4>(UHF, LHF, PHF, DIF);
+				safes[i] = Safe<NUMLOCKS, 4>(UHF, LHF, PHF, DIF);
 
 			char c;
 			cout << "BONUS_MULTI_SAFE? (Y/N): ";
@@ -297,7 +299,7 @@ int main(char **argv, int argc) {
 			numSafes = lockedFile.readLockedSafe(safes);
 			numSafes = findHash(safes, numSafes, hashes);
 			for (int i = 0; i < numSafes; ++i) {
-				safes[i] = Safe<5, 4>(hashes[3 * i], hashes[3 * i + 1], hashes[3 * i + 2]);
+				safes[i] = Safe<NUMLOCKS, 4>(hashes[3 * i], hashes[3 * i + 1], hashes[3 * i + 2]);
 			}
 			solvedKeyFile.printKey(safes, numSafes);
 		}

@@ -1,7 +1,15 @@
 #include "Safe.h"
 
 
+template Safe<1, 4>;
+template Safe<2, 4>;
+template Safe<3, 4>;
+template Safe<4, 4>;
 template Safe<5, 4>;
+template Safe<6, 4>;
+template Safe<7, 4>;
+template Safe<8, 4>;
+template Safe<9, 4>;
 
 
 

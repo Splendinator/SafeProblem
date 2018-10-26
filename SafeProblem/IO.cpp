@@ -25,7 +25,7 @@ void IO::printKey(Vector<Dial, 4> *roots, Vector<Dial, 4> UHF, Vector<Dial, 4> L
 	}
 }
 
-void IO::printKey(Safe<5, 4>* s, int numSafes) throw(IOException)
+void IO::printKey(Safe<NUMLOCKS, 4>* s, int numSafes) throw(IOException)
 {
 	if (!fs.is_open()) throw IOException();
 	printNumSolutions(numSafes);
@@ -39,7 +39,7 @@ void IO::printKey(Safe<5, 4>* s, int numSafes) throw(IOException)
 }
 
 
-void IO::printLockedSafe(Safe<5, 4> *s, int numSafes) throw(IOException)
+void IO::printLockedSafe(Safe<NUMLOCKS, 4> *s, int numSafes) throw(IOException)
 {
 
 	if (!fs.is_open()) throw IOException();
@@ -47,14 +47,15 @@ void IO::printLockedSafe(Safe<5, 4> *s, int numSafes) throw(IOException)
 	printNumSolutions(numSafes);
 	for (int j = 0; j < numSafes; ++j) {
 		fs << "ROOT: " << s[j].ROOT << std::endl;
-		for (int i = 0; i < 5; ++i) {
+		for (int i = 0; i < NUMLOCKS; ++i) {
 			fs << "LN" << i << ": " << s[j].locks[i].LN << std::endl;
 		}
 	}
 }
 
-int IO::readLockedSafe(Safe<5, 4>* safe) throw(IOException)
+int IO::readLockedSafe(Safe<NUMLOCKS,4> *safe) throw(IOException)
 {
+
 	if (!fs.is_open()) throw IOException();
 	fs.seekg(0, 0);
 
@@ -68,7 +69,7 @@ int IO::readLockedSafe(Safe<5, 4>* safe) throw(IOException)
 	fs >> numSafes;
 
 	for (int i = 0; i < numSafes; ++i) {
-		for (int j = 0; j < 6 /* NUM_LOCKS + 1 */; ++j) {
+		for (int j = 0; j < NUMLOCKS + 1 ; ++j) {
 			fs >> s;
 			for (int k = 0; k < 4; ++k) {
 				while (!((fs >> c[k], c[k]) >= 48 && c[k] <= 57) && !(c[k] == '+') && !(c[k] == '-'));
@@ -88,17 +89,17 @@ int IO::readLockedSafe(Safe<5, 4>* safe) throw(IOException)
 				}
 			}
 		}
-		safe[i] = Safe<5,4>();
+		safe[i] = Safe<NUMLOCKS,4>();
 		safe[i].ROOT = Vector<Dial, 4>({ d[0], d[1], d[2], d[3] });
 
-		for (int j = 1; j < 6 /*NUM_LOCKS*/; ++j)
+		for (int j = 1; j < NUMLOCKS+1; ++j)
 			safe[i].locks[j-1].LN = Vector<Dial,4>({ d[j * 4 + 0], d[j * 4 + 1], d[j * 4 + 2], d[j * 4 + 3] });
 		
 	}
 	return numSafes;
 }
 
-void IO::printMultiSafe(Safe<5, 4>* safes, int numSafes)
+void IO::printMultiSafe(Safe<NUMLOCKS, 4>* safes, int numSafes)
 {
 	fs.seekg(0, 0);
 	printNumSolutions(numSafes);
