@@ -1,38 +1,3 @@
-7784 -- START NUM
-
-+2 +9 +4 +0
-
-
-
-AB = {7,4,1,8,5}
-
-A = 0
-B != 1 4 5 7 8
-
-A = 1
-B != 2 5 6 8 9
-
-AC = {2,4,6,8,0}
-BC = !{0,5,0,5,0}
-   = {1,2,3,4,6,7,8,9}
-   = 
-
-AC UNION BC
-{2,4,6,8}
-
-
-AD = !{0,2,4,6,8}
-BD = !{9,8,7,6,5}
-CD = !{0,2,4,6,8}
-
-AD = {1,3,5,7,9}
-CD = {1,3,5,7,9}
-BD = {0,1,2,3,4}
-
-UNION = {1,3}
-
-
-
 
 
 
@@ -42,7 +7,7 @@ This is the difference for this example:
 
 
 Step 1- Generate these sets of possible numbers. (All 10 possible combinations)
-KEY: XY {0,...,n}  (The valid numbers Y can be if X is go in the set)
+KEY: XY {0,...,n}  (The valid numbers dial Y can be if dial X is 0)
 
 AB = {1,2,3,4,5,6,7,8,9}
 
@@ -67,14 +32,14 @@ A = 0
 
 B = AB{1,2,3,4,5,6,7,8,9}
 
-C = AC{9,8,7,6,5} UNION BC[0-9]{{9,8,7,6,5},{0,9,8,7,6},...,{8,7,6,5,4}}
+C = AC{9,8,7,6,5} UNION BC[1-9]{{9,8,7,6,5},{0,9,8,7,6},...,{8,7,6,5,4}}
 
 D = ...
 
 
 
-This approach lets us cut out huge ammounts of data (usually half at a time, sometimes less though if N=5 or N=0)
-where N is the "relative difference" between two numbers rate of increasion.
+This approach lets us cut out huge ammounts of data (usually half at a time, less if N=5 or N=0)
+where N is the "relative difference" between two dials rate of increasion.
 
 E.G 1 -- Failing Example
 
@@ -126,6 +91,41 @@ This would mean we have just removed 10% of potential roots in a single iteratio
 
 
 
+
+
+
+7784 -- START NUM
+
++2 +9 +4 +0
+
+
+
+AB = {7,4,1,8,5}
+
+A = 0
+B != 1 4 5 7 8
+
+A = 1
+B != 2 5 6 8 9
+
+AC = {2,4,6,8,0}
+BC = !{0,5,0,5,0}
+   = {1,2,3,4,6,7,8,9}
+   = 
+
+AC UNION BC
+{2,4,6,8}
+
+
+AD = !{0,2,4,6,8}
+BD = !{9,8,7,6,5}
+CD = !{0,2,4,6,8}
+
+AD = {1,3,5,7,9}
+CD = {1,3,5,7,9}
+BD = {0,1,2,3,4}
+
+UNION = {1,3}
 
 
 
